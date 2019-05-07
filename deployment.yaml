@@ -1,0 +1,34 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: keras-demo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: keras-demo
+  template:
+    metadata:
+      labels:
+        app: keras-demo
+    spec:
+      containers:
+      - name: keras-demo
+        image: ${ORIGIN_REPO}/${REPO}:${IMAGE_TAG}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keras-demo
+spec:
+  ports:
+  - port: 80
+    targetPort: 5000
+    name: keras-demo
+  selector:
+    app: keras-demo
+  type: LoadBalancer
